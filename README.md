@@ -9,11 +9,16 @@ $github:=github.API.new()
 
 ### Basic auth
 
+https://developer.github.com/v3/auth/#basic-authentication
+https://developer.github.com/v3/#oauth2-keysecret
+
 ```4d
 $github.authBasic("username";"passwork or api key")
 ```
 
 ### Token
+
+https://developer.github.com/v3/#oauth2-token-sent-in-a-header
 
 ```4d
 $github.authToken("a token")
