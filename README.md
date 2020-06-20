@@ -33,19 +33,21 @@ $result:=$github.request("/user")
 
 ### Cheking result
 
-```4d
-ASSERT($result.success)
-```
+| $result attribute |Description | 
+|--|-- | 
+| .success | Will return `True` if the request was successful, `False` otherwise | 
+| .value | The requested data decoded as object or collection | 
+| .code | The HTTP code returned by request | 
 
-If `$result.success`is `False` you will receive an `Error` object with basic information about the issue, otherwise a `$result.value` will contains the requested data.
+If `$result.success`is `False` you will receive an `Error` object with basic information about the issue like `.message`.
 
 ### Endpoints
 
-To help with request some github api endpoints are already implemented. This endpoints will decode into class instance.s
+To help with request some github api endpoints are already implemented. This endpoints will decode into class instances.
 
 #### Get information of user authenticated
 
 ```4d
 $result:=$github.user()
-// $result.value is a User object.
+// $result.value is an User object.
 ```
