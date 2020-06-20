@@ -9,8 +9,8 @@ $github:=github.API.new()
 
 ### Basic auth
 
-https://developer.github.com/v3/auth/#basic-authentication
-https://developer.github.com/v3/#oauth2-keysecret
+- https://developer.github.com/v3/auth/#basic-authentication
+- https://developer.github.com/v3/#oauth2-keysecret
 
 ```4d
 $github.authBasic("username";"passwork or api key")
@@ -51,6 +51,8 @@ If `$result.success`is `False` you will receive an `Error` object with basic inf
 To help with request some github api endpoints are already implemented. This endpoints will decode into class instances.
 
 #### Get information of user authenticated
+
+https://developer.github.com/v3/users/#get-the-authenticated-user
 
 ```4d
 $result:=$github.user()
