@@ -1,7 +1,9 @@
 
 # Github API with 4D
 
+```4d
 $github:=github()
+```
 
 ## Authenticate
 
