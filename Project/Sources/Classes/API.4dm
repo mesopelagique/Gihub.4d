@@ -69,6 +69,9 @@ Function authJWT
 	// https://developer.github.com/apps/building-github-apps/authenticating-with-github-apps/#authenticating-as-a-github-app
 	// https://github.com/gr2m/universal-github-app-jwt
 	
+	C_TEXT:C284($signature)
+	C_OBJECT:C1216($payload;$settings;$header;$options;$key)
+	
 	$settings:=New object:C1471(\
 		"type";"PEM";\
 		"pem";$1.getText())
@@ -99,6 +102,7 @@ Function authJWT
 	
 /* Make the final request */
 Function request
+	C_OBJECT:C1216($0)
 	C_TEXT:C284($1;$path)
 	C_TEXT:C284($2;$method)  // opt method (default GET)
 	C_OBJECT:C1216($3)  // opt class
@@ -122,6 +126,7 @@ Function request
 	
 	ARRAY TEXT:C222($headerNames;0)
 	ARRAY TEXT:C222($headerValues;0)
+	C_TEXT:C284($key)
 	For each ($key;This:C1470.headers)
 		APPEND TO ARRAY:C911($headerNames;$key)
 		APPEND TO ARRAY:C911($headerValues;This:C1470.headers[$key])
@@ -146,6 +151,7 @@ Function request
 				: (Value type:C1509($0.value)=Is collection:K8:32)
 					C_COLLECTION:C1488($col)
 					$col:=New collection:C1472()  // it will better have map with formula
+					C_VARIANT:C1683($value)
 					For each ($value;$0.value)
 						$col.push($3.new($value))
 					End for each 

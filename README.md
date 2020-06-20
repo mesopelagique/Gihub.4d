@@ -2,7 +2,7 @@
 # Github API with 4D
 
 ```4d
-$github:=github()
+$github:=github.API.new()
 ```
 
 ## Authenticate

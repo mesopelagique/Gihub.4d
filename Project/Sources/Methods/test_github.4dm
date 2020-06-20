@@ -1,7 +1,8 @@
 //%attributes = {}
 
+C_OBJECT:C1216($github;$result)
 
-$github:=cs:C1710.Github.new()
+$github:=github.API.new()
 
 // $github.authBasic("mesopelagique";"passwork or api key")
 
