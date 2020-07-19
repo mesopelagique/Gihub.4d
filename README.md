@@ -28,7 +28,7 @@ $github.authToken("a token")
 
 > to come
 
-## Doing request
+## Doing a request
 
 Example: Getting information about current authenticated user
 
@@ -56,5 +56,27 @@ https://developer.github.com/v3/users/#get-the-authenticated-user
 
 ```4d
 $result:=$github.user()
-// $result.value is an User object.
 ```
+
+`$result.value` will be an `User` object if success.
+
+#### List repositories for the authenticated user
+
+https://developer.github.com/v3/repos/#list-repositories-for-the-authenticated-user
+
+```4d
+$result:=$github.repositories()
+```
+
+`$result.value` will be a collection of `Repository` objects if success.
+
+#### Create a repository for the authenticated used
+
+https://developer.github.com/v3/repos/#create-a-repository-for-the-authenticated-user
+ 
+```4d
+$repo:=github.Repository.new(New object("name"; "MyRepo"))
+$result:=$github.create($result)
+```
+
+`$result.value` will be an `Repository` object if success.
