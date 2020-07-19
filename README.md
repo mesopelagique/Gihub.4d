@@ -79,4 +79,4 @@ $repo:=github.Repository.new(New object("name"; "MyRepo"))
 $result:=$github.create($result)
 ```
 
-`$result.value` will be an `Repository` object if success.
+`$result.value` will be a `Repository` object if success.
