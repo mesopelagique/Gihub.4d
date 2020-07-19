@@ -40,9 +40,9 @@ $result:=$github.request("/user")
 
 | $result attribute |Description | 
 |--|-- | 
-| .success | Will return `True` if the request was successful, `False` otherwise | 
-| .value | The requested data decoded as object or collection | 
-| .code | The HTTP code returned by request | 
+| `.success` | Will return `True` if the request was successful, `False` otherwise | 
+| `.value` | The requested data decoded as object or collection | 
+| `.code` | The HTTP code returned by request | 
 
 If `$result.success`is `False` you will receive an `Error` object with basic information about the issue like `.message`.
 
@@ -76,6 +76,18 @@ https://developer.github.com/v3/repos/#create-a-repository-for-the-authenticated
  
 ```4d
 $repo:=github.Repository.new(New object("name"; "MyRepo"))
+$result:=$github.create($result)
+```
+
+`$result.value` will be a `Repository` object if success.
+
+##### Create an organization repository
+
+https://developer.github.com/v3/repos/#create-an-organization-repository
+
+```4d
+$repo:=github.Repository.new(New object("name"; "MyRepo"; \
+    "owner"; github.Organization.new(New object("name"; "OeOrga"))))
 $result:=$github.create($result)
 ```
 
