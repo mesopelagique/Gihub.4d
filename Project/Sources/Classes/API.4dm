@@ -8,35 +8,45 @@ Class constructor
 /* Return information about connected user */
 Function user
 	C_OBJECT:C1216($0)
-	$0:=This:C1470.request("user";HTTP GET method:K71:1;cs:C1710.User)
+	$0:=This:C1470.request("user"; HTTP GET method:K71:1; cs:C1710.User)
 	
 Function issues
 	C_OBJECT:C1216($0)
-	$0:=This:C1470.request("issues";HTTP GET method:K71:1;cs:C1710.Issue)
+	$0:=This:C1470.request("issues"; HTTP GET method:K71:1; cs:C1710.Issue)
 	
 Function apps
 	C_OBJECT:C1216($0)
 	C_TEXT:C284($1)
-	$0:=This:C1470.request("apps/"+$1;HTTP GET method:K71:1;cs:C1710.App)
+	$0:=This:C1470.request("apps/"+$1; HTTP GET method:K71:1; cs:C1710.App)
 	
 Function app
 	C_OBJECT:C1216($0)
-	$0:=This:C1470.request("app/";HTTP GET method:K71:1;cs:C1710.App)
+	$0:=This:C1470.request("app/"; HTTP GET method:K71:1; cs:C1710.App)
 	
 Function repositories
 	C_OBJECT:C1216($0)
-	$0:=This:C1470.request("repositories";HTTP GET method:K71:1;cs:C1710.Repository)
+	$0:=This:C1470.request("repositories"; HTTP GET method:K71:1; cs:C1710.Repository)
 	
 Function userRepositories
 	C_OBJECT:C1216($0)
 	C_TEXT:C284($1)
-	$0:=This:C1470.request("users/"+$1+"/repos";HTTP GET method:K71:1;cs:C1710.Repository)
+	$0:=This:C1470.request("users/"+$1+"/repos"; HTTP GET method:K71:1; cs:C1710.Repository)
 	
 Function orgRepositories
 	C_OBJECT:C1216($0)
 	C_TEXT:C284($1)
-	$0:=This:C1470.request("orgs/"+$1+"/repos";HTTP GET method:K71:1;cs:C1710.Repository)
+	$0:=This:C1470.request("user/repos"; HTTP GET method:K71:1; cs:C1710.Repository)
 	
+Function create
+	C_OBJECT:C1216($0)
+	C_OBJECT:C1216($1)
+	
+	Case of 
+		: (OB Instance of:C1731($1.createEntryPoint; 4D:C1709.Function))
+			$0:=This:C1470.request($1.createEntryPoint(); HTTP POST method:K71:2; cs:C1710.Repository; $1)
+		Else 
+			$0:=New object:C1471("success"; False:C215; "message"; "Not able to create"; "errors"; New collection:C1472("Not create class "+String:C10(OB Class:C1730($1))))
+	End case 
 	
 	// MARK: Authentication: https://developer.github.com/v3/auth/
 /* 
@@ -45,13 +55,13 @@ It could be client id and secret for server-to-server scenario: https://develope
 Or username + key
 */
 Function authBasic
-	C_TEXT:C284($1;$2)
+	C_TEXT:C284($1; $2)
 	C_BLOB:C604($tmpBlob)
 	
 	C_TEXT:C284($toEncode)
 	$toEncode:=$1+":"+$2
-	TEXT TO BLOB:C554($toEncode;$tmpBlob;UTF8 text without length:K22:17)
-	BASE64 ENCODE:C895($tmpBlob;$toEncode)
+	TEXT TO BLOB:C554($toEncode; $tmpBlob; UTF8 text without length:K22:17)
+	BASE64 ENCODE:C895($tmpBlob; $toEncode)
 	
 	This:C1470.headers["Authorization"]:="Basic "+$toEncode
 	
@@ -70,32 +80,32 @@ Function authJWT
 	// https://github.com/gr2m/universal-github-app-jwt
 	
 	C_TEXT:C284($signature)
-	C_OBJECT:C1216($payload;$settings;$header;$options;$key)
+	C_OBJECT:C1216($payload; $settings; $header; $options; $key)
 	
 	$settings:=New object:C1471(\
-		"type";"PEM";\
-		"pem";$1.getText())
+		"type"; "PEM"; \
+		"pem"; $1.getText())
 	
 	// Get CryptoKey class reference
 	$key:=cs:C1710.JWT.new($settings)
 	
-	$options:=New object:C1471("algorithm";"RS256")
-	$header:=New object:C1471("alg";$options.algorithm;"type";"JWT"/*;"kid";$1.authKeyId*/)
+	$options:=New object:C1471("algorithm"; "RS256")
+	$header:=New object:C1471("alg"; $options.algorithm; "type"; "JWT"/*;"kid";$1.authKeyId*/)
 	
 	// Get current date and time avoiding timezone issues
 	
-	C_TIME:C306($currentTime;$timeGMT)
+	C_TIME:C306($currentTime; $timeGMT)
 	C_DATE:C307($dateGMT)
 	C_LONGINT:C283($iat)
 	$currentTime:=Current time:C178
-	$timeGMT:=Time:C179(Replace string:C233(Delete string:C232(String:C10(Current date:C33;ISO date GMT:K1:10;$currentTime);1;11);"Z";""))
-	$dateGMT:=Date:C102(Delete string:C232(String:C10(Current date:C33;ISO date GMT:K1:10;$currentTime);12;20)+"00:00:00")
-	$iat:=(($dateGMT-Add to date:C393(!00-00-00!;1970;1;1))*86400)+($timeGMT+0)
+	$timeGMT:=Time:C179(Replace string:C233(Delete string:C232(String:C10(Current date:C33; ISO date GMT:K1:10; $currentTime); 1; 11); "Z"; ""))
+	$dateGMT:=Date:C102(Delete string:C232(String:C10(Current date:C33; ISO date GMT:K1:10; $currentTime); 12; 20)+"00:00:00")
+	$iat:=(($dateGMT-Add to date:C393(!00-00-00!; 1970; 1; 1))*86400)+($timeGMT+0)
 	
-	$payload:=New object:C1471("iat";$iat;"expiration";$iat+60;"iss";$2)  // expire in 1 minute
+	$payload:=New object:C1471("iat"; $iat; "expiration"; $iat+60; "iss"; $2)  // expire in 1 minute
 	
 	// Sign
-	$signature:=$key.sign($header;$payload;$options)
+	$signature:=$key.sign($header; $payload; $options)
 	This:C1470.headers["Authorization"]:="Bearer "+$signature
 	
 	// MARK: Network request
@@ -103,9 +113,10 @@ Function authJWT
 /* Make the final request */
 Function request
 	C_OBJECT:C1216($0)
-	C_TEXT:C284($1;$path)
-	C_TEXT:C284($2;$method)  // opt method (default GET)
+	C_TEXT:C284($1; $path)
+	C_TEXT:C284($2; $method)  // opt method (default GET)
 	C_OBJECT:C1216($3)  // opt class
+	C_OBJECT:C1216($4)  // opt class
 	
 	C_TEXT:C284($body)
 	C_TEXT:C284($response)
@@ -114,9 +125,14 @@ Function request
 	
 	$path:=$1
 	If ($path[[1]]="/")  // remove first / if any, already in base url
-		$path:=Substring:C12($path;2)
+		$path:=Substring:C12($path; 2)
 	End if 
-	$body:=""
+	
+	If (Count parameters:C259>3)
+		$body:=JSON Stringify:C1217($4)
+	Else 
+		$body:=""
+	End if 
 	
 	If (Count parameters:C259>1)
 		$method:=$2
@@ -124,24 +140,24 @@ Function request
 		$method:=HTTP GET method:K71:1  // default
 	End if 
 	
-	ARRAY TEXT:C222($headerNames;0)
-	ARRAY TEXT:C222($headerValues;0)
+	ARRAY TEXT:C222($headerNames; 0)
+	ARRAY TEXT:C222($headerValues; 0)
 	C_TEXT:C284($key)
-	For each ($key;This:C1470.headers)
-		APPEND TO ARRAY:C911($headerNames;$key)
-		APPEND TO ARRAY:C911($headerValues;This:C1470.headers[$key])
+	For each ($key; This:C1470.headers)
+		APPEND TO ARRAY:C911($headerNames; $key)
+		APPEND TO ARRAY:C911($headerValues; This:C1470.headers[$key])
 	End for each 
 	
 	$url:=This:C1470.baseURL+$path
 	
-	$code:=HTTP Request:C1158($method;$url;$body;$response;$headerNames;$headerValues)
+	$code:=HTTP Request:C1158($method; $url; $body; $response; $headerNames; $headerValues)
 	
 	If ($code>399)
 		$0:=cs:C1710.Error.new(JSON Parse:C1218($response))
 		$0.code:=$code
 		$0.success:=False:C215
 	Else 
-		$0:=New object:C1471("code";$code;"value";JSON Parse:C1218($response))
+		$0:=New object:C1471("code"; $code; "value"; JSON Parse:C1218($response))
 		$0.success:=True:C214
 		
 		If (Count parameters:C259>2)  // decode using a class
@@ -152,7 +168,7 @@ Function request
 					C_COLLECTION:C1488($col)
 					$col:=New collection:C1472()  // it will better have map with formula
 					C_VARIANT:C1683($value)
-					For each ($value;$0.value)
+					For each ($value; $0.value)
 						$col.push($3.new($value))
 					End for each 
 					$0.value:=$col

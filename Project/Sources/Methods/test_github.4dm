@@ -1,13 +1,16 @@
 //%attributes = {}
 
-C_OBJECT:C1216($github;$result)
+C_OBJECT:C1216($github; $result)
 
 $github:=github.API.new()
 
-// $github.authBasic("mesopelagique";"passwork or api key")
+$github.authBasic("mesopelagique"; "passwork or api key")
 
 //$result:=$github.request("/user")
 //$result:=$github.user()
+
+$result:=github.Repository.new(New object:C1471("name"; "TestXXXToto"))
+$result:=$github.create($result)
 
 //$result:=$github.request("/issues")
 //$result:=$github.issues()
@@ -33,6 +36,6 @@ $github:=github.API.new()
 
 // GET the authenticated app https://developer.github.com/v3/apps/#get-the-authenticated-app
 
-$github.authJWT(Folder:C1567(fk resources folder:K87:11).file("app.private-key.pem");69584)
+//$github.authJWT(Folder(fk resources folder).file("app.private-key.pem"); 69584)
 
 $result:=$github.app()  // must be authenticated as app
