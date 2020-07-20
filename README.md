@@ -76,7 +76,7 @@ https://developer.github.com/v3/repos/#create-a-repository-for-the-authenticated
  
 ```4d
 $repo:=github.Repository.new(New object("name"; "MyRepo"))
-$result:=$github.create($result)
+$result:=$github.create($repo)
 ```
 
 `$result.value` will be a `Repository` object if success.
@@ -88,7 +88,7 @@ https://developer.github.com/v3/repos/#create-an-organization-repository
 ```4d
 $repo:=github.Repository.new(New object("name"; "MyRepo"; \
     "owner"; github.Organization.new(New object("name"; "OeOrga"))))
-$result:=$github.create($result)
+$result:=$github.create($repo)
 ```
 
 `$result.value` will be a `Repository` object if success.
